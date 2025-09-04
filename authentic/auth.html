@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Skull Store | Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="description" content="Skull Store">
+    <meta name="theme-color" content="#0e1014">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="auth.css">
+    
+    <style>
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover,
+        input:-webkit-autofill:focus,
+        input:-webkit-autofill:active {
+            -webkit-box-shadow: 0 0 0 1000px #1a1e28 inset !important;
+            -webkit-text-fill-color: #f1f3f5 !important;
+            background-color: #1a1e28 !important;
+            transition-delay: 99999s !important;
+        }
+        html, body {
+            background-color: #0e1014;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            touch-action: none;
+        }
+        .auth-section {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden; z-index: 50; background-color: rgba(14, 16, 20, 0.8);
+        }
+        .auth-box {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%); overflow: hidden;
+            padding: 2rem; border-radius: var(--border-radius-lg);
+            box-shadow: var(--card-shadow); background: var(--dark-bg-lighter);
+            border: 1px solid var(--border-color); width: 90%; max-width: 360px;
+            text-align: center; z-index: 100;
+        }
+        @media (max-height: 500px) {
+            .auth-box { top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 1.5rem; overflow: hidden; }
+            .logo-container { margin-bottom: 0.8rem; }
+            h2 { margin-bottom: 0.3rem; font-size: 1.3rem; }
+            .auth-description { margin-bottom: 0.8rem; font-size: 0.8rem; }
+        }
+        .notificacao-sucesso, .notificacao-erro {
+            position: fixed; bottom: 20px; left: 50%; right: auto;
+            transform: translateX(-50%); padding: 12px 20px;
+            border-radius: var(--border-radius-md); box-shadow: var(--card-shadow);
+            color: var(--text-light); font-weight: 500; z-index: 1000;
+            display: flex; align-items: center; gap: 10px; font-size: 0.85rem;
+            text-align: center; width: auto; max-width: 80%; animation: none; opacity: 1;
+        }
+        .notificacao-sucesso { background: var(--accent-color); }
+        .notificacao-erro { background: var(--error-color); }
+        @keyframes fadeSimple { 0% { opacity: 0; } 100% { opacity: 1; } }
+        * { touch-action: manipulation; -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
+        input, textarea { -webkit-user-select: text; user-select: text; }
+        input:disabled { opacity: 1 !important; background-color: var(--dark-bg-lightest) !important; color: var(--text-light) !important; cursor: text !important; }
+    </style>
+</head>
+<body>
+    <!-- INÍCIO DA MODIFICAÇÃO: Botão de retorno -->
+    <a href="#" id="back-to-store-btn" title="Voltar para a loja">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+    <!-- FIM DA MODIFICAÇÃO -->
+
+    <div class="container">
+        <section id="login-container" class="auth-section">
+            <div class="auth-box">
+                <div class="logo-container"><i class="fas fa-bolt glow-icon"></i></div>
+                <h2>Acesse sua conta</h2>
+                <p class="auth-description">Entre com suas credenciais para acessar o sistema</p>
+                <div class="input-container">
+                    <i class="fas fa-envelope"></i>
+                    <input type="text" id="login-email" placeholder="E-mail ou CPF" required autocomplete="username">
+                </div>
+                <div class="input-container">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="login-password" placeholder="Sua senha" required autocomplete="current-password">
+                    <i class="fas fa-eye toggle-password" id="toggle-login-password"></i>
+                </div>
+                <div class="remember-me-container">
+                    <input type="checkbox" id="remember-me">
+                    <label for="remember-me">Lembrar-me</label>
+                </div>
+                <button id="login-btn" onclick="login()" disabled class="cta-button primary-btn desabilitado">
+                    <span>Entrar</span>
+                    <div class="spinner"></div>
+                </button>
+                <div class="auth-links">
+                    <a href="#" onclick="toggleEsqueceuSenha(true)" class="link-esqueceu-senha">Esqueceu a senha?</a>
+                    <a href="#" onclick="toggleCadastro(true)" class="link-cadastro">Não tem conta? <span class="highlight">Cadastre-se</span></a>
+                </div>
+            </div>
+        </section>
+        <section id="esqueceu-senha-container" class="auth-section" style="display:none;">
+            <div class="auth-box">
+                <div class="logo-container"><i class="fas fa-unlock-alt glow-icon"></i></div>
+                <h2>Recuperar Senha</h2>
+                <div id="etapa-verificacao">
+                    <p class="auth-description">Digite seu e-mail ou CPF para recuperar sua senha.</p>
+                    <div class="input-container">
+                        <i class="fas fa-envelope"></i>
+                        <input type="text" id="recuperacao-identificador" placeholder="E-mail ou CPF" required>
+                    </div>
+                    <button id="verificar-identificador-btn" onclick="verificarIdentificador()" class="cta-button primary-btn">
+                        <span>Verificar</span>
+                        <div class="spinner"></div>
+                    </button>
+                </div>
+                <div id="etapa-redefinicao" style="display:none;">
+                    <p class="auth-description">Digite sua nova senha abaixo.</p>
+                    <div class="input-container">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="nova-senha" placeholder="Nova senha" required>
+                        <i class="fas fa-eye toggle-password" id="toggle-nova-senha"></i>
+                    </div>
+                    <div class="input-container">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="confirmar-nova-senha" placeholder="Confirmar nova senha" required>
+                        <i class="fas fa-eye toggle-password" id="toggle-confirmar-senha"></i>
+                    </div>
+                    <button id="redefinir-senha-btn" onclick="redefinirSenha()" class="cta-button primary-btn">
+                        <span>Redefinir Senha</span>
+                        <div class="spinner"></div>
+                    </button>
+                </div>
+                <p class="toggle"><a href="#" onclick="toggleEsqueceuSenha(false)">Voltar para o login</a></p>
+            </div>
+        </section>
+        <section id="cadastro-container" class="auth-section" style="display:none;">
+            <div class="auth-box">
+                <div class="logo-container"><i class="fas fa-user-plus glow-icon"></i></div>
+                <h2>Crie sua conta</h2>
+                <p class="auth-description">Preencha os campos abaixo para se cadastrar</p>
+                <div class="input-container">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="cadastro-nome" placeholder="Nome completo" required>
+                </div>
+                <div class="input-container">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="cadastro-email" placeholder="E-mail" required>
+                    <i class="fas fa-question-circle help-icon" id="email-help" data-tooltip="Aceitamos apenas contas @gmail.com para garantir o acesso facilitado ao Google Drive para downloads."></i>
+                </div>
+                <div class="input-container">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="cadastro-password" placeholder="Senha" required autocomplete="new-password">
+                    <i class="fas fa-eye toggle-password" id="toggle-cadastro-password"></i>
+                </div>
+                <div class="input-container">
+                    <i class="fas fa-id-card"></i>
+                    <input type="text" id="cadastro-cpf" placeholder="CPF" required maxlength="14">
+                </div>
+                <button id="cadastro-btn" onclick="cadastro()" class="cta-button primary-btn">
+                    <span>Cadastrar</span>
+                    <div class="spinner"></div>
+                </button>
+                <p class="toggle"><a href="#" onclick="toggleCadastro(false)">Já tenho uma conta? <span class="highlight">Entrar</span></a></p>
+            </div>
+        </section>
+    </div>
+
+    <script src="../config.js"></script>
+    <script src="auth.js"></script>
+</body>
+</html>

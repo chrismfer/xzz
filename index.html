@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Skull Store | Bem-Vindo!</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="Skull Store">
+    <meta name="theme-color" content="#0e1014">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Orbitron:wght@400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    
+    <style>
+        .product-price-login-prompt {
+            font-size: 0.9rem;
+            color: var(--warning-color);
+            font-weight: 500;
+        }
+        .guest-nav {
+            justify-content: center !important;
+        }
+        #bottom-nav-guest {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            width: 100%;
+        }
+        .bottom-nav-item.locked {
+            cursor: pointer;
+            color: var(--text-light-muted);
+            opacity: 0.7;
+        }
+        .bottom-nav-item.locked i {
+            color: var(--warning-color);
+        }
+        #conhecer, #manual {
+            padding: 0;
+            overflow: hidden;
+        }
+        #conhecer-iframe, #manual-iframe {
+            width: 100%;
+            border: none;
+            display: block;
+        }
+    </style>
+
+</head>
+<body>
+    <div class="overlay" id="overlay"></div>
+    <div class="preload-images" id="preload-container"></div>
+
+    <header class="navbar" id="site-header">
+        <div class="logo">
+            <!-- MODIFICAÇÃO: Classe 'pulse-icon' trocada por 'glow-icon-static' -->
+            <i class="fas fa-bolt glow-icon-static"></i>
+            <span>Skull<span class="highlight">Store</span></span>
+        </div>
+        
+        <nav class="header-nav-buttons desktop-only" id="nav-logged-in">
+            <button class="header-nav-btn active" data-tab="loja"><i class="fas fa-home"></i> Início</button>
+            <button class="header-nav-btn" data-tab="pedidos"><i class="fas fa-box-open"></i> Meus Produtos</button>
+            <button class="header-nav-btn" data-tab="manual"><i class="fas fa-book-open"></i> Suporte</button>
+            <button class="header-nav-btn" data-tab="carrinho"><i class="fas fa-shopping-cart"></i> Carrinho <span class="cart-count-header" id="cart-count-header-desktop">0</span></button>
+        </nav>
+        
+        <nav class="header-nav-buttons desktop-only guest-nav" id="nav-guest" style="display: none;">
+            <button class="header-nav-btn active" data-tab="loja"><i class="fas fa-store"></i> Início</button>
+            <!-- MODIFICAÇÃO: Adicionada classe 'highlight-guest-desktop' para destacar o botão -->
+            <button class="header-nav-btn highlight-guest-desktop" data-tab="conhecer"><i class="fas fa-rocket"></i> Quero Conhecer</button>
+            <button class="header-nav-btn" id="guest-login-btn-desktop"><i class="fas fa-user-circle"></i> Sou Membro</button>
+        </nav>
+
+        <div class="header-right-content">
+            <div id="user-info-desktop" class="header-user-info user-info-loading">
+                <span id="user-name-desktop"></span>
+                <span class="user-access-separator"></span>
+                <span id="user-access-status"></span>
+            </div>
+            <button class="header-nav-btn" id="logout-btn-desktop"><i class="fas fa-sign-out-alt"></i> Sair</button>
+        </div>
+    </header>
+
+    <div class="mobile-menu" id="mobile-menu">
+        <div class="mobile-menu-header">
+            <div class="logo">
+                <!-- MODIFICAÇÃO: Classe 'pulse-icon' trocada por 'glow-icon-static' -->
+                <i class="fas fa-bolt glow-icon-static"></i>
+                <span>Skull<span class="highlight">Store</span></span>
+            </div>
+            <div class="menu-toggle-in-menu" id="menu-toggle-in-menu">
+                <div class="hamburger-icon"><span></span><span></span><span></span></div>
+            </div>
+        </div>
+        <div id="user-info-mobile" class="header-user-info mobile-user-info user-info-loading">
+            <span id="user-name-mobile"></span>
+            <span class="user-access-separator"></span>
+            <span id="user-access-status-mobile"></span>
+        </div>
+        <div class="mobile-menu-options">
+            <a href="#" class="header-nav-btn" data-tab="manual" id="menu-instructions"><i class="fas fa-book-open"></i> Suporte</a>
+            <a href="#" id="menu-logout-mobile"><i class="fas fa-sign-out-alt"></i> Sair</a>
+        </div>
+        <div class="mobile-menu-footer">
+            <div class="footer-section">
+                <h3 class="footer-heading">Conecte-se Conosco</h3>
+                <div class="social-icons">
+                    <a href="https://www.facebook.com/groups/windows.lite.entusiastas" title="Facebook" target="_blank" rel="noopener" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://t.me/+TYJye7KLha9jNzgx" title="Telegram" target="_blank" rel="noopener" class="social-icon"><i class="fab fa-telegram-plane"></i></a>
+                    <a href="https://www.youtube.com/@CHRISSKULLOFICIAL?sub_confirmation=1" title="YouTube" target="_blank" rel="noopener" class="social-icon"><i class="fab fa-youtube"></i></a>
+                    <a href="https://www.tiktok.com/@cskull_softwares?_t=ZM-8ubo8hZVepq&_r=1" title="TikTok" target="_blank" rel="noopener" class="social-icon"><i class="fab fa-tiktok"></i></a>
+                    <a href="https://www.instagram.com/cskull_softwares/" title="Instagram" target="_blank" rel="noopener" class="social-icon"><i class="fab fa-instagram"></i></a>
+                </div>
+                <p class="copyright">© 2025 Chris Skull Dev.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <section id="store-container" class="store-section">
+            <div class="filter-container">
+                <div class="search-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="product-search" class="product-search-input" placeholder="Pesquisar">
+                </div>
+                <select id="product-filter" class="product-filter-select" onchange="filtrarProdutos(this.value)">
+                    <option value="todos">Filtre e encontre</option>
+                    <option value="win10">Windows 10</option>
+                    <option value="win11">Windows 11</option>
+                    <option value="outros">Outros</option>
+                </select>
+            </div>
+            <div class="tab-content active" id="loja">
+                <div class="product-grid" id="product-grid">
+                    <div class="placeholder-message">Carregando produtos...</div>
+                </div>
+            </div>
+            <div class="tab-content" id="carrinho">
+                <div id="cart-items"><div class="empty-cart">Seu carrinho está vazio</div></div>
+                <div class="cart-summary" id="cart-summary" style="display: none;">
+                    <div class="cart-total">
+                        <span>Total:</span>
+                        <span id="cart-total">R$ 0,00</span>
+                    </div>
+                    <button id="checkout-btn" onclick="checkout()" class="cta-button primary-btn">
+                        <span><i class="fas fa-shopping-cart"></i> Finalizar Compra</span>
+                        <div class="spinner"></div>
+                    </button>
+                </div>
+            </div>
+           <div class="tab-content" id="pedidos">
+                <div id="sync-status-indicator" class="sync-status-indicator">
+                    <div class="spinner"></div>
+                    <span>Verificando e atualizando...</span>
+                </div>
+                <div id="pedidos-list">
+                    <div class="placeholder-message">...</div>
+                </div>
+            </div>
+            <div class="tab-content" id="conhecer">
+                <iframe id="conhecer-iframe" src="about:blank" style="width: 100%; height: 0; border: none; display: block;"></iframe>
+            </div>
+            <div class="tab-content" id="manual">
+                <iframe id="manual-iframe" src="about:blank" style="width: 100%; height: 0; border: none; display: block;"></iframe>
+            </div>
+        </section>
+
+        <nav class="bottom-nav mobile-only" id="bottom-nav">
+            <div id="bottom-nav-logged-in" style="display: flex; justify-content: space-around; width: 100%;">
+                <div class="bottom-nav-item active" data-tab="loja"><i class="fas fa-home"></i><span>Início</span></div>
+                <div class="bottom-nav-item" data-tab="pedidos"><i class="fas fa-box-open"></i><span>Produtos</span></div>
+                <div class="bottom-nav-item" data-tab="carrinho"><i class="fas fa-shopping-cart"></i><span>Carrinho</span><div class="bottom-nav-badge" id="bottom-cart-count">0</div></div>
+                <div class="bottom-nav-item" id="bottom-nav-menu-toggle"><i class="fas fa-bars"></i><span>Menu</span></div>
+            </div>
+
+            <div id="bottom-nav-guest" style="display: none;">
+                 <div class="bottom-nav-item active" data-tab="loja"><i class="fas fa-store"></i><span>Início</span></div>
+                 <div class="bottom-nav-item highlight-guest" data-tab="conhecer"><i class="fas fa-rocket"></i><span>Conhecer</span></div>
+                 <div class="bottom-nav-item" id="guest-login-btn-mobile"><i class="fas fa-user-circle"></i><span>Sou Membro</span></div>
+            </div>
+        </nav>
+
+        <div id="product-detail-modal" class="product-detail-modal">
+            <div class="product-detail-content">
+                <div class="product-image-background"><img id="product-detail-background" src="public/images/background.png" alt=""></div>
+                <div class="modal-header">
+                    <h2 id="product-detail-title">Produto</h2>
+                    <button id="modal-close-btn" class="modal-close"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="product-image-container"><img id="product-detail-image" src="public/images/background.png" alt="Imagem do produto"></div>
+                <div class="product-detail-body">
+                    <div class="product-detail-pricing">
+                        <span id="product-detail-original-price">R$ 0,00</span>
+                        <span id="product-detail-current-price">R$ 0,00</span>
+                    </div>
+                    <div id="product-metadata" class="product-metadata"></div>
+                    <div class="product-detail-divider"></div>
+                    <div id="product-detail-description"></div>
+                    <div class="product-detail-action">
+                        <button id="add-to-cart-detail" class="add-to-cart-detail"><i class="fas fa-cart-plus"></i> Adicionar ao Carrinho</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="pix-modal" class="modal">
+            <div class="modal-content">
+                <button class="close-modal" onclick="closeModal('pix-modal')"><i class="fas fa-times"></i></button>
+                <div class="pix-header">
+                    <h3><i class="fab fa-pix"></i> Pagamento via PIX</h3>
+                </div>
+                <div class="pix-body">
+                    <div class="pix-qrcode-container">
+                        <img id="qr-code-img" alt="QR Code de pagamento" class="qr-code-image">
+                    </div>
+                    <p class="pix-scan-text">Escaneie o QR Code com o app do seu banco</p>
+                    <div class="pix-separator"><span>OU</span></div>
+                    <p class="pix-copy-text">Copie o código e cole no seu banco:</p>
+                    <div class="pix-key-container">
+                        <input id="pix-key-input" type="text" readonly>
+                        <button id="copy-pix-btn" onclick="copyPixKey()" class="copy-btn" title="Copiar código PIX">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                    </div>
+                    <div id="status-verificacao" style="display: none;">
+                        <div class="spinner"></div>
+                        <span>Aguardando confirmação do pagamento...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="download-error-modal" class="modal">
+            <div class="modal-content" style="max-width: 450px;">
+                <div class="download-error-header">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <h3>Acesso ao Download</h3>
+                </div>
+                <div class="download-error-body">
+                    <p id="download-error-message">Mensagem de erro padrão.</p>
+                </div>
+                <div class="download-error-action">
+                    <button onclick="closeModal('download-error-modal')" class="cta-button">
+                        <span>Entendi</span>
+                    </button>
+                    <a href="public/manual.html" target="_blank" onclick="closeModal('download-error-modal')" id="download-error-rules-btn" class="cta-button">
+                        <span>Ver Regras</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div id="image-viewer-modal" class="image-viewer-modal">
+            <div class="image-viewer-content">
+                <span class="close-image-viewer">×</span>
+                <div class="image-counter" id="image-counter">1 / 1</div>
+                <div class="image-viewer-container">
+                    <div class="image-navigation prev-image"><i class="fas fa-chevron-left"></i></div>
+                    <div class="main-image-viewer"><img src="" alt="Imagem do produto" id="viewer-main-image"></div>
+                    <div class="image-navigation next-image"><i class="fas fa-chevron-right"></i></div>
+                </div>
+                <div class="image-thumbnails-container" id="image-thumbnails"></div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="site-footer" id="site-footer">
+      <div class="footer-section">
+        <h3 class="footer-heading">Conecte-se Conosco</h3>
+        <div class="social-icons">
+          <a href="https://www.facebook.com/groups/windows.lite.entusiastas" title="Facebook" target="_blank" rel="noopener" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+          <a href="https://t.me/+TYJye7KLha9jNzgx" title="Telegram" target="_blank" rel="noopener" class="social-icon"><i class="fab fa-telegram-plane"></i></a>
+          <a href="https://www.youtube.com/@CHRISSKULLOFICIAL?sub_confirmation=1" title="YouTube" target="_blank" rel="noopener" class="social-icon"><i class="fab fa-youtube"></i></a>
+          <a href="https://www.tiktok.com/@cskull_softwares?_t=ZM-8ubo8hZVepq&_r=1" title="TikTok" target="_blank" rel="noopener" class="social-icon"><i class="fab fa-tiktok"></i></a>
+          <a href="https://www.instagram.com/cskull_softwares/" title="Instagram" target="_blank" rel="noopener" class="social-icon"><i class="fab fa-instagram"></i></a>
+        </div>
+        <p class="copyright">© 2025 Chris Skull Dev. Todos os direitos reservados.</p>
+      </div>
+    </footer>
+
+    <script src="config.js"></script>
+    <script src="core.js"></script>
+    <script src="cacheManager.js"></script>
+    <script src="productManager.js"></script>
+    <script src="cartManager.js"></script>
+    <script src="ordersManager.js"></script>
+    <script src="details.js"></script>
+</body>
+</html>
